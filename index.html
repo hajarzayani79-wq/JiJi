@@ -2,28 +2,664 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Smart To-Do Pro</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>📜 Grimoire des Quêtes Légendaires ✨</title>
+  <style>
+    /* ==============================================
+       STYLE KORAFI O 7TIRAFI — MYSTICAL CODEX VIBE
+       Anyone who sees this will say "WAWW" 💫
+    ============================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 20% 30%, #0a0f1e, #03060c);
+      font-family: 'Cinema', 'Segoe UI', 'Goudy Old Style', 'Georgia', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* animated stars / mystical particles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(2px 2px at 20px 30px, #ffdd99, rgba(0,0,0,0)),
+                        radial-gradient(1px 1px at 70px 120px, #ffbb88, rgba(0,0,0,0));
+      background-size: 200px 200px, 150px 150px;
+      background-repeat: repeat;
+      opacity: 0.3;
+      pointer-events: none;
+      animation: starTwinkle 4s infinite alternate;
+      z-index: 0;
+    }
+
+    @keyframes starTwinkle {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.5; }
+    }
+
+    /* floating mystical aura */
+    .container {
+      position: relative;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(145deg, rgba(20, 10, 35, 0.75), rgba(5, 3, 15, 0.85));
+      padding: 35px 25px;
+      border-radius: 64px 48px 64px 48px;
+      width: 500px;
+      max-width: 95%;
+      border: 1px solid rgba(255, 215, 150, 0.6);
+      box-shadow: 0 25px 45px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,200,0.2), 0 0 20px rgba(255,200,100,0.3);
+      transition: all 0.3s ease;
+      animation: floatShadow 5s infinite alternate;
+    }
+
+    @keyframes floatShadow {
+      0% { transform: translateY(0px); box-shadow: 0 25px 45px rgba(0,0,0,0.6); }
+      100% { transform: translateY(-6px); box-shadow: 0 35px 55px rgba(0,0,0,0.8), 0 0 30px rgba(255,200,80,0.4); }
+    }
+
+    h1 {
+      font-size: 2.7rem;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #f9e0a0, #ffb347, #ffcc88);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 8px #ffaa33, 0 0 2px #ffdd99;
+      margin-bottom: 10px;
+      word-break: keep-all;
+      font-family: 'Georgia', 'Times New Roman', serif;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #ecd8b4;
+      font-style: italic;
+      margin-bottom: 25px;
+      font-size: 0.8rem;
+      border-bottom: 1px dashed rgba(255,215,150,0.5);
+      display: inline-block;
+      width: auto;
+      padding: 0 15px 8px;
+      letter-spacing: 2px;
+    }
+
+    /* mystique input zone */
+    .input-box {
+      display: flex;
+      gap: 12px;
+      background: rgba(0,0,0,0.5);
+      padding: 8px;
+      border-radius: 80px;
+      backdrop-filter: blur(4px);
+      border: 1px solid #ffcf8a;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      background: rgba(30, 20, 40, 0.9);
+      border: none;
+      padding: 14px 20px;
+      border-radius: 50px;
+      font-size: 1rem;
+      color: #ffefcf;
+      font-family: monospace;
+      letter-spacing: 1px;
+      outline: none;
+      transition: all 0.2s;
+      border: 1px solid #c9aa5f;
+    }
+
+    input:focus {
+      border-color: #ffcc77;
+      box-shadow: 0 0 14px #ffbb66;
+      background: #1a1025;
+      transform: scale(1.01);
+    }
+
+    .input-box button {
+      background: radial-gradient(circle at 30% 10%, #ffbf69, #e68a2e);
+      border: none;
+      width: 56px;
+      border-radius: 50px;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2d1b0a;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 3px 0 #7a3e0a;
+      transform: translateY(-2px);
+    }
+
+    .input-box button:active {
+      transform: translateY(2px);
+      box-shadow: 0 0px 0 #7a3e0a;
+    }
+
+    /* FILTER RUNES */
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 15px 0 20px;
+    }
+
+    .filters button {
+      background: rgba(10, 8, 25, 0.7);
+      border: 1px solid #eab868;
+      padding: 8px 20px;
+      border-radius: 60px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      backdrop-filter: blur(4px);
+      transition: 0.2s;
+      color: #fad28c;
+      font-family: monospace;
+    }
+
+    .filters button:hover {
+      background: #ffb347;
+      color: #201a0a;
+      border-color: #fff0b5;
+      box-shadow: 0 0 12px #ffc285;
+      transform: scale(1.05);
+    }
+
+    /* TASK LIST - MAGICAL SCROLL */
+    ul {
+      padding: 0;
+      margin-top: 20px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    ul::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ul::-webkit-scrollbar-track {
+      background: #2e1b2e;
+      border-radius: 10px;
+    }
+
+    ul::-webkit-scrollbar-thumb {
+      background: #ffb652;
+      border-radius: 10px;
+    }
+
+    li {
+      list-style: none;
+      padding: 12px 18px;
+      margin: 12px 0;
+      border-radius: 60px 30px 60px 30px;
+      background: linear-gradient(115deg, rgba(70, 40, 70, 0.7), rgba(40, 20, 45, 0.9));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      border-left: 5px solid #ffbc6e;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      cursor: pointer;
+      animation: fadeSlideUp 0.25s ease;
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    li:hover {
+      transform: translateX(5px) scale(1.02);
+      background: linear-gradient(115deg, rgba(110, 60, 100, 0.8), rgba(60, 30, 70, 0.9));
+      border-left-color: #ffdd99;
+      box-shadow: 0 0 15px rgba(255, 180, 80, 0.4);
+    }
+
+    li span {
+      flex: 1;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #fff2df;
+      font-family: 'Courier New', monospace;
+      word-break: break-word;
+      padding-right: 10px;
+      transition: 0.2s;
+      text-shadow: 0 0 2px #744e1e;
+    }
+
+    li button {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #ffa559;
+      border-radius: 40px;
+      font-size: 1.2rem;
+      padding: 6px 12px;
+      color: #ffbb88;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: bold;
+    }
+
+    li button:hover {
+      background: #be3e2e;
+      color: white;
+      border-color: #ffbb88;
+      transform: scale(1.1);
+      box-shadow: 0 0 10px #f66;
+    }
+
+    /* DONE = quête accomplie (effet ancien parchemin) */
+    .done span {
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      text-decoration-color: #eebb77;
+      opacity: 0.7;
+      font-style: italic;
+      filter: blur(0.3px);
+      background: linear-gradient(135deg, #a5946e, #5b4a2e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: none;
+    }
+
+    .done {
+      background: linear-gradient(115deg, rgba(30, 25, 20, 0.7), rgba(20, 15, 10, 0.85));
+      border-left-color: #888;
+      filter: grayscale(0.1);
+    }
+
+    /* mystic counter + gamification */
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding: 12px 18px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #ffddbb;
+      border-top: 1px solid #eab45e;
+      font-family: monospace;
+    }
+
+    .stats span {
+      background: #1f1528;
+      padding: 5px 12px;
+      border-radius: 40px;
+      color: #ffcf8a;
+    }
+
+    .glow-text {
+      color: #faca6e;
+      font-weight: bold;
+    }
+
+    /* notification magical */
+    .toast-msg {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1f1930dd;
+      backdrop-filter: blur(16px);
+      border-radius: 60px;
+      padding: 10px 22px;
+      color: #ffdeae;
+      font-family: monospace;
+      border: 1px solid gold;
+      font-size: 0.85rem;
+      pointer-events: none;
+      z-index: 999;
+      transition: opacity 0.5s;
+      opacity: 0;
+      white-space: nowrap;
+    }
+
+    /* responsive */
+    @media (max-width: 550px) {
+      .container {
+        padding: 20px 15px;
+      }
+      h1 {
+        font-size: 1.9rem;
+      }
+      li span {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* fun cursor */
+    body, button, li {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 24 28"><polygon points="2,2 22,13 14,15 12,25 7,15 2,13" fill="%23f7c56e" stroke="%238a4f1a" stroke-width="1.2"/></svg>') 4 4, auto;
+    }
+  </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>✨ Smart To-Do</h1>
+  <h1>📜 Grimoire des Quêtes</h1>
+  <div style="text-align: center;"><span class="subtitle">✦ Rituel des Tâches Anciennes ✦</span></div>
 
   <div class="input-box">
-    <input type="text" id="taskInput" placeholder="Ajouter une tâche...">
-    <button onclick="addTask()">+</button>
+    <input type="text" id="taskInput" placeholder="Écrire un sort (une tâche...)">
+    <button id="addMagicBtn">✦</button>
   </div>
 
   <div class="filters">
-    <button onclick="filterTasks('all')">All</button>
-    <button onclick="filterTasks('active')">Active</button>
-    <button onclick="filterTasks('done')">Done</button>
+    <button data-filter="all">🔮 TOUT</button>
+    <button data-filter="active">⚔️ ACTIVES</button>
+    <button data-filter="done">🏆 ACCOMPLIES</button>
   </div>
 
   <ul id="taskList"></ul>
+
+  <div class="stats">
+    <div>📜 Quêtes actives: <span id="activeCount">0</span></div>
+    <div>✨ Accomplies: <span id="doneCount">0</span></div>
+    <div>⭐ Total: <span id="totalCount">0</span></div>
+  </div>
 </div>
 
-<script src="script.js"></script>
+<div id="magicToast" class="toast-msg"></div>
+
+<script>
+  // ============================================================
+  // KORAFI O 7TIRAFI EDITION — GRIMOIRE TO-DO AVEC MAGIE & IMMERSION
+  // Sons implicites (vibrations mentales), animations, sagesse
+  // ============================================================
+  
+  let tasks = JSON.parse(localStorage.getItem("arcane_tasks")) || [];
+  let currentFilter = "all";
+
+  // DOM éléments
+  const taskListEl = document.getElementById("taskList");
+  const taskInput = document.getElementById("taskInput");
+  const addBtn = document.getElementById("addMagicBtn");
+  const activeCountSpan = document.getElementById("activeCount");
+  const doneCountSpan = document.getElementById("doneCount");
+  const totalCountSpan = document.getElementById("totalCount");
+  const toast = document.getElementById("magicToast");
+
+  // ===  animation toast mystique
+  function showMagicMessage(msg, isError = false) {
+    toast.style.opacity = "1";
+    toast.textContent = msg;
+    toast.style.background = isError ? "#4a1a1acc" : "#1f2a1ccc";
+    toast.style.borderColor = isError ? "#ff8866" : "#eac264";
+    setTimeout(() => {
+      toast.style.opacity = "0";
+    }, 2100);
+  }
+
+  // === mise à jour des statistiques épiques
+  function updateStats() {
+    const total = tasks.length;
+    const active = tasks.filter(t => !t.done).length;
+    const done = tasks.filter(t => t.done).length;
+    activeCountSpan.innerText = active;
+    doneCountSpan.innerText = done;
+    totalCountSpan.innerText = total;
+    
+    // Effet de vibration subtile sur le container si beaucoup de tâches
+    const container = document.querySelector('.container');
+    if (total >= 10) {
+      container.style.animation = "floatShadow 3s infinite alternate, gentleBuzz 0.3s ease";
+      setTimeout(() => { container.style.animation = "floatShadow 5s infinite alternate"; }, 300);
+    }
+  }
+  
+  // === enregistrement automatique localStorage + mystic sound (simulé par confettis mentaux)
+  function persistAndRender() {
+    localStorage.setItem("arcane_tasks", JSON.stringify(tasks));
+    renderTasks();
+    updateStats();
+  }
+
+  // === générer un effet d'énergie visuelle (courte animation sur le bouton ou l'élément)
+  function addSparkleEffect(element) {
+    if (!element) return;
+    element.style.transform = "scale(1.07)";
+    element.style.filter = "drop-shadow(0 0 6px #ffcc77)";
+    setTimeout(() => {
+      element.style.transform = "";
+      element.style.filter = "";
+    }, 180);
+  }
+
+  // === RENDER AVEC STYLE MYSTIQUE ET DRAGON HUES
+  function renderTasks() {
+    taskListEl.innerHTML = "";
+    let filteredTasks = tasks.filter(task => {
+      if (currentFilter === "active") return !task.done;
+      if (currentFilter === "done") return task.done;
+      return true;
+    });
+
+    if (filteredTasks.length === 0) {
+      const emptyMsg = document.createElement("div");
+      emptyMsg.textContent = currentFilter === "all" ? "🌙 Aucune quête... écris un sort !" : (currentFilter === "active" ? "⚡ Aucune quête active, libère ton courage !" : "🏅 Aucune tâche accomplie... pour l'instant.");
+      emptyMsg.style.textAlign = "center";
+      emptyMsg.style.padding = "30px";
+      emptyMsg.style.fontStyle = "italic";
+      emptyMsg.style.opacity = "0.7";
+      emptyMsg.style.color = "#e8cf9a";
+      taskListEl.appendChild(emptyMsg);
+    } else {
+      filteredTasks.forEach((task, idx) => {
+        // retrouver l'index réel dans le tableau original (car filtre)
+        const originalIndex = tasks.findIndex(t => t.id === task.id);
+        if (originalIndex === -1) return;
+        
+        const li = document.createElement("li");
+        if (task.done) li.classList.add("done");
+        
+        const textSpan = document.createElement("span");
+        textSpan.textContent = task.text;
+        
+        // toggle task (accomplir / rouvrir)
+        textSpan.onclick = (e) => {
+          e.stopPropagation();
+          toggleTaskMagic(originalIndex);
+          addSparkleEffect(textSpan);
+          // sonorité imaginaire : afficher message
+          const newStatus = !tasks[originalIndex].done;
+          showMagicMessage(newStatus ? "✨ Quête accomplie ! +1 Sagesse ✨" : "🔄 Quête rouverte, la flamme renaît !");
+        };
+        
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "🗝️❌";
+        deleteBtn.title = "Supprimer définitivement";
+        deleteBtn.onclick = (e) => {
+          e.stopPropagation();
+          deleteTaskMystic(originalIndex);
+          showMagicMessage(`⚠️ La quête "${task.text.substring(0, 25)}" a disparu du grimoire...`, false);
+          addSparkleEffect(deleteBtn);
+        };
+        
+        li.appendChild(textSpan);
+        li.appendChild(deleteBtn);
+        taskListEl.appendChild(li);
+        
+        // animation apparition légère
+        li.style.animation = "fadeSlideUp 0.2s ease-out";
+      });
+    }
+  }
+  
+  // === toggle (accomplir) avec gamification & MESSAGES
+  function toggleTaskMagic(index) {
+    if (index < 0 || index >= tasks.length) return;
+    const wasDone = tasks[index].done;
+    tasks[index].done = !wasDone;
+    
+    // petit bonus d'ambiance : si on accomplit, animation subtile
+    if (!wasDone && tasks[index].done) {
+      // effet lumineux sur le container
+      const container = document.querySelector('.container');
+      container.style.boxShadow = "0 0 30px #ffd58c, inset 0 0 15px #ffbb66";
+      setTimeout(() => {
+        container.style.boxShadow = "0 25px 45px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,200,0.2)";
+      }, 400);
+      showMagicMessage(`🏆 ${tasks[index].text.substring(0, 30)} — Légende enregistrée !`);
+    } else if (wasDone && !tasks[index].done) {
+      showMagicMessage(`🌙 Tâche réactivée : "${tasks[index].text.substring(0, 28)}" rejoint les actives.`);
+    }
+    persistAndRender();
+  }
+  
+  // === suppression mystique avec confirmation élégante et animation
+  function deleteTaskMystic(index) {
+    if (index < 0 || index >= tasks.length) return;
+    const deletedText = tasks[index].text;
+    tasks.splice(index, 1);
+    persistAndRender();
+    showMagicMessage(`💀 Le sort "${deletedText.substring(0, 30)}" est effacé du temps. 💀`);
+    // si aucune tâche, message spécial
+    if (tasks.length === 0) {
+      setTimeout(() => {
+        showMagicMessage("📖 Le grimoire est vide... prêt à écrire de nouvelles légendes !");
+      }, 500);
+    }
+  }
+  
+  // === addTask avec validation avancée
+  function addTask() {
+    let rawText = taskInput.value.trim();
+    if (rawText === "") {
+      showMagicMessage("❌ Incantation vide ! Écris une quête digne de ce nom.", true);
+      addSparkleEffect(addBtn);
+      return;
+    }
+    
+    // limite de caractères mais garde le style (pas plus de 100)
+    if (rawText.length > 80) {
+      rawText = rawText.slice(0, 77) + "...";
+      showMagicMessage("🧙‍♂️ Parchemin limité, ta quête a été raccourcie !", false);
+    }
+    
+    // Création d'ID unique pour filtrer avec robustesse en cas de doublon mais on gère
+    const newTask = {
+      id: Date.now() + Math.random() * 1000,
+      text: rawText,
+      done: false,
+      createdAt: new Date().toISOString()
+    };
+    tasks.push(newTask);
+    taskInput.value = "";
+    persistAndRender();
+    showMagicMessage(`✨ Nouvelle quête ajoutée : "${rawText.substring(0, 35)}" ✨`);
+    addSparkleEffect(addBtn);
+    
+    // scroll auto smooth dans la liste
+    setTimeout(() => {
+      const listContainer = document.getElementById("taskList");
+      if (listContainer.lastChild) listContainer.lastChild.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 50);
+  }
+  
+  // === filter tasks with Rune effect
+  function filterTasks(type) {
+    currentFilter = type;
+    renderTasks();
+    let filterMsg = "";
+    if (type === "all") filterMsg = "🔮 Toutes les quêtes apparaissent...";
+    else if (type === "active") filterMsg = "⚔️ Seules les quêtes actives sont visibles. À l'attaque !";
+    else filterMsg = "🏅 Les légendes accomplies illuminent le grimoire.";
+    showMagicMessage(filterMsg);
+    // animation highlight filter buttons
+    document.querySelectorAll('.filters button').forEach(btn => {
+      btn.style.transform = "scale(0.98)";
+      setTimeout(() => { btn.style.transform = ""; }, 150);
+    });
+  }
+  
+  // === CHARGEMENT & EVENTS MYSTIQUES
+  function init() {
+    // migration : s'assurer que les anciennes données sans id aient un id (compatibilité)
+    let needsUpdate = false;
+    tasks = tasks.map(t => {
+      if (!t.id) {
+        needsUpdate = true;
+        return { ...t, id: Date.now() + Math.random() * 10000 };
+      }
+      return t;
+    });
+    if (needsUpdate) persistAndRender();
+    
+    renderTasks();
+    updateStats();
+    
+    // event listeners
+    addBtn.addEventListener("click", addTask);
+    taskInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        addTask();
+      }
+    });
+    
+    document.querySelectorAll('.filters button').forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const filterType = btn.getAttribute("data-filter");
+        if (filterType) filterTasks(filterType);
+      });
+    });
+    
+    // initial attributs data-filter
+    document.querySelector('.filters button[data-filter="all"]').setAttribute("data-filter", "all");
+    document.querySelector('.filters button[data-filter="active"]').setAttribute("data-filter", "active");
+    document.querySelector('.filters button[data-filter="done"]').setAttribute("data-filter", "done");
+    
+    // petit effet au chargement
+    showMagicMessage("📜 Grimoire enchanté chargé... Que tes quêtes soient épiques !");
+    setTimeout(() => {
+      const title = document.querySelector("h1");
+      if (title) title.style.animation = "textGlow 1s ease";
+    }, 200);
+  }
+  
+  // ajout d'une animation douce au titre
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = `
+    @keyframes textGlow {
+      0% { text-shadow: 0 0 0px #ffcc77; }
+      100% { text-shadow: 0 0 18px #ffbe5e, 0 0 5px gold; }
+    }
+    @keyframes gentleBuzz {
+      0% { transform: translateX(-1px);}
+      100% { transform: translateX(1px);}
+    }
+  `;
+  document.head.appendChild(styleSheet);
+  
+  // LANCEMENT DU RITUEL
+  init();
+</script>
 </body>
 </html>
